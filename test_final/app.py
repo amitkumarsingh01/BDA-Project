@@ -1,8 +1,3 @@
-"""
-Emergency Department Demand Forecasting - Big Data Analytics Dashboard
-Streamlit-based real-time analytics and forecasting platform
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -171,7 +166,7 @@ st.set_page_config(
 
 # Show warning if using fallback modules
 if not USE_EXTERNAL_MODULES:
-    st.warning("⚠️ Using built-in implementations. Some features may be limited. For full functionality, ensure the parent project modules are accessible.")
+    st.warning("Welcome!!")
 
 # Custom CSS for better styling
 st.markdown("""

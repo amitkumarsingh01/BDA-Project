@@ -1,0 +1,105 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{ragged2e}
+\usepackage{amsmath}
+\usepackage{times}%Times New Roman Font
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{lipsum}
+\usepackage{framed}
+\usepackage[left=1.25in, right=0.75in, top=0.75in, bottom=1in, twoside]{geometry}
+\parskip 4mm
+\parindent 1.2in
+\linespread{1.3}
+
+
+
+\begin{document}
+\begin{center}
+\begin{minipage}[c]{0.15\textwidth} % logo block
+\centering
+\includegraphics[scale=0.048]{Croped_logo.png}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.8\textwidth}  % text block
+\centering
+\textsc{\Large Dayananda Sagar College of Engineering}\\[1.5mm]
+\textsc{\large Department of Computer Science and Engineering}
+\end{minipage}
+\end{center}
+
+
+
+\begin{flushleft}  
+\hrule
+\begin{center} 
+ \underline{\textbf{\textsc{\large Alternative Assessment Tool (AAT)}}}\\ [.20 cm]
+\end{center}
+
+
+%change content here onwards, do not change anything above this line..
+
+\textbf{Name of the Candidate}: Ankit Kumar \\
+\textbf{Registration No}: 1DS22CS033  \\
+\textbf{Programme}: B.E   \\
+\textbf{Course}: Big Data Analytics  \\
+\textbf{Topic}: Emergency Department Demand Forecasting   \\
+\end{flushleft}
+\hrule
+\justify
+
+\section*{Introduction}
+
+Emergency Department (ED) demand forecasting represents one of the most critical and challenging applications of big data analytics in healthcare management systems. Modern emergency departments generate massive volumes of heterogeneous data from multiple sources including patient registration systems, Electronic Health Records (EHR), triage systems, laboratory results, imaging systems, and operational databases. The exponential growth in healthcare data volume, velocity, and variety presents unprecedented opportunities for leveraging big data analytics to predict patient arrivals, resource requirements, and operational needs with remarkable accuracy. However, the value of sophisticated analytics is fully realized only when insights are effectively communicated to stakeholders through intuitive, interactive visualizations.
+
+As the Frontend Developer and UI/UX Designer for this project, my primary responsibility focused on developing a comprehensive, user-friendly dashboard that transforms complex data and forecasts into actionable insights. The fundamental challenge of accurately forecasting ED demand requires not only sophisticated algorithms but also effective visualization infrastructure that enables healthcare administrators to make timely, informed decisions. My contribution addressed these challenges through comprehensive dashboard development, interactive visualizations, real-time metrics display, and intuitive user interface design.
+
+\begin{figure}[h]
+\center
+\includegraphics[scale=.40]{margins.jpg}
+\caption{Emergency Department Demand Forecasting Overview}
+\end{figure} 
+
+My first major contribution involved designing and implementing the complete Streamlit dashboard architecture. The dashboard employs a wide layout configuration optimized for displaying multiple visualizations simultaneously, enabling comprehensive data exploration. The sidebar control panel provides centralized access to all configuration options, maintaining clean separation between controls and visualization areas. Session state management ensures data persistence across user interactions, enabling seamless user experience during data exploration and analysis. The modular component structure facilitates independent development and testing of individual dashboard sections.
+
+The dashboard header features a prominent, professionally styled title with healthcare-themed iconography, establishing immediate visual context. Custom CSS styling ensures consistent appearance across all components, with carefully selected color schemes reflecting healthcare industry standards. The color palette emphasizes blues and greens, colors associated with trust, professionalism, and healthcare environments. The responsive design adapts to different screen sizes, ensuring usability across desktop and tablet devices.
+
+The second critical component of my work involved developing six comprehensive interactive visualizations using Plotly, each designed to address specific analysis needs. The Patient Arrivals Over Time visualization employs a line chart with markers, displaying aggregated patient arrivals in 15-minute intervals. This visualization enables identification of temporal patterns, peak periods, and trends. Interactive features including hover tooltips provide detailed information at each data point, while zoom and pan capabilities enable detailed examination of specific time periods.
+
+The Demand Forecast visualization combines historical data with predicted values and confidence intervals, providing comprehensive view of both past patterns and future expectations. Historical data appears as solid blue lines, while forecasts appear as dashed orange lines, enabling clear visual distinction. Confidence intervals are displayed as semi-transparent shaded regions, providing intuitive representation of prediction uncertainty. The visualization updates dynamically as new data arrives and forecasts refresh, maintaining current information.
+
+The Triage Level Distribution visualization employs a pie chart with color-coding that reflects urgency levels. Darker red tones represent more urgent cases (Critical, Urgent), while lighter tones represent less urgent cases (Standard, Low Priority, Non-Urgent). This visualization enables rapid assessment of patient acuity mix, critical for resource planning and staff allocation decisions. Interactive features include hover tooltips showing exact percentages and counts for each triage level.
+
+The Chief Complaints visualization employs a horizontal bar chart displaying the top 10 most common complaints. The chart uses color intensity to indicate frequency, with darker shades representing more frequent complaints. This visualization enables identification of predominant patient conditions, facilitating resource preparation and specialized staff allocation. The horizontal orientation optimizes readability of complaint names while maintaining clear visual hierarchy.
+
+The Hourly Arrival Pattern visualization employs a vertical bar chart displaying patient arrival distribution across 24 hours. Color gradients using the Viridis color scheme provide visual indication of volume intensity. This visualization enables identification of peak hours, facilitating shift planning and staff scheduling. The visualization clearly shows typical patterns with higher arrivals during evening hours (6 PM - 10 PM) and lower arrivals during early morning hours (2 AM - 6 AM).
+
+The Capacity Monitoring visualization employs an area chart displaying bed occupancy rates over time, with horizontal threshold lines indicating warning (80\%) and critical (95\%) levels. Color-coding provides immediate visual indication of capacity status, with green indicating comfortable capacity, yellow indicating warning zones, and red indicating critical capacity. This visualization enables proactive capacity management, alerting administrators to potential overcrowding before it occurs.
+
+The third major component of my contribution involved developing real-time metrics display components. Four key metric cards provide immediate overview of current ED status: Total Patients displays cumulative arrival count since data collection began; Recent Arrivals (1hr) shows patients arriving in the last hour, enabling assessment of current activity level; Available Beds indicates current capacity; Waiting Patients shows patients awaiting bed assignment. These metrics update dynamically as new data arrives, providing real-time situational awareness.
+
+The fourth critical aspect of my work involved designing comprehensive user interface components. The simulation controls section enables users to configure data generation parameters including auto-refresh settings, refresh intervals, and patient arrival rates. The forecast settings panel allows users to select forecasting models and configure forecast horizons. The data management section provides controls for generating sample data, clearing existing data, and managing data collection. Each control includes clear labels, helpful tooltips, and appropriate default values ensuring ease of use.
+
+The Recent Patient Arrivals table displays detailed information for the last 20 patient arrivals, including patient ID, arrival time, age, gender, triage level, chief complaint, and temperature. The table includes sorting capabilities, enabling users to organize data by any column. The table design balances information density with readability, using appropriate column widths and text formatting.
+
+Auto-refresh functionality enables continuous monitoring of real-time data streams. Users can configure refresh intervals from 1 to 10 seconds, balancing update frequency with system performance. The refresh mechanism includes visual indicators ensuring users understand when updates occur. Error handling ensures graceful degradation when data updates fail, maintaining system stability.
+
+Big data analytics tools played essential roles in implementing these solutions. Streamlit provided the web framework enabling rapid development of interactive dashboards without requiring frontend programming languages (HTML, CSS, JavaScript). Streamlit's built-in widgets including sliders, buttons, checkboxes, and selectors enabled efficient control panel development. Plotly provided interactive visualization capabilities with professional appearance suitable for healthcare administration environments. Pandas facilitated data manipulation and preparation for visualization components.
+
+The benefits of effective dashboard visualization extend across multiple dimensions of healthcare operations. Operational benefits include improved decision-making through clear presentation of complex data, enabling administrators to identify patterns and trends quickly. Enhanced situational awareness enables proactive resource allocation, preventing issues before they escalate. Improved communication between stakeholders facilitates coordinated responses to changing conditions. Training benefits include visual learning aids that help new administrators understand ED operations patterns.
+
+Future enhancements to the dashboard could include additional visualization types such as heatmaps for multi-dimensional pattern analysis, geographical maps for location-based insights, and comparative charts enabling multi-period analysis. Mobile responsiveness improvements could enable access from smartphones and tablets. Export functionality could enable generation of reports and presentations. Real-time alerting systems could notify administrators when capacity thresholds are exceeded. User authentication and role-based access control could enable secure multi-user deployment. The foundation established through this work provides a solid base for such enhancements while maintaining system usability and performance.
+
+\vspace{1cm}
+\begin{flushleft}
+\textbf{Signature of the Course Coordinator} 
+\hspace{4cm}
+\textbf{Signature of the Candidate}
+\end{flushleft}
+
+\end{document}
+

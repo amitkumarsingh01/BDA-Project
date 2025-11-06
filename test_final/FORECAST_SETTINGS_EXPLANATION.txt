@@ -1,0 +1,387 @@
+================================================================================
+FORECAST SETTINGS - DETAILED EXPLANATION
+================================================================================
+
+The Forecast Settings section in the dashboard sidebar allows users to configure
+how the system predicts future patient demand. This section contains two main
+controls that significantly impact forecast accuracy and utility.
+
+================================================================================
+1. FORECAST HORIZON (15-MINUTE WINDOWS)
+================================================================================
+
+WHAT IS IT?
+-----------
+The Forecast Horizon determines how far into the future the system will predict
+patient arrivals. It's measured in "15-minute windows" because patient arrivals
+are aggregated into 15-minute time intervals for analysis.
+
+TECHNICAL DETAILS:
+- Range: 4 to 24 windows
+- Default Value: 8 windows
+- Unit: Each window = 15 minutes
+- Total Time Range: 1 hour (4 windows) to 6 hours (24 windows)
+
+CONVERSION EXAMPLES:
+- 4 windows  = 4 × 15 minutes = 60 minutes  = 1 hour
+- 8 windows  = 8 × 15 minutes = 120 minutes = 2 hours (DEFAULT)
+- 12 windows = 12 × 15 minutes = 180 minutes = 3 hours
+- 24 windows = 24 × 15 minutes = 360 minutes = 6 hours
+
+HOW IT WORKS:
+-------------
+When you set the forecast horizon to N windows, the system:
+1. Takes the most recent historical data point
+2. Predicts patient arrivals for the next N consecutive 15-minute periods
+3. Displays these predictions as a forecast line on the chart
+4. Shows confidence intervals (upper and lower bounds) for each prediction
+
+VISUAL REPRESENTATION:
+----------------------
+On the Demand Forecast chart:
+- Historical data (blue line) shows actual past arrivals
+- Forecast line (orange dashed line) shows predicted future arrivals
+- Shaded area shows confidence interval (uncertainty range)
+- X-axis shows time extending into the future by your selected horizon
+
+EXAMPLE SCENARIOS:
+
+Scenario 1: Short-term planning (4 windows = 1 hour)
+- Use Cases: Immediate resource allocation, next hour staffing
+- Best For: Quick decisions, real-time adjustments
+- Accuracy: Higher (less uncertainty for near-term predictions)
+
+Scenario 2: Medium-term planning (8 windows = 2 hours) - DEFAULT
+- Use Cases: Shift planning, 2-hour resource preparation
+- Best For: Most operational decisions
+- Accuracy: Good balance between accuracy and useful time range
+
+Scenario 3: Long-term planning (24 windows = 6 hours)
+- Use Cases: Extended shift planning, daily capacity planning
+- Best For: Strategic planning, longer-term resource allocation
+- Accuracy: Lower (more uncertainty for distant predictions)
+
+WHY 15-MINUTE WINDOWS?
+-----------------------
+- Balances detail with noise reduction
+- Standard emergency department planning interval
+- Provides sufficient granularity without excessive complexity
+- Matches typical ED operational decision-making cycles
+
+ACCURACY CONSIDERATIONS:
+------------------------
+- Shorter horizons (4-8 windows): More accurate, less uncertainty
+- Longer horizons (16-24 windows): Less accurate, more uncertainty
+- Confidence intervals widen as horizon increases
+- Accuracy decreases because more factors can change over longer periods
+
+RECOMMENDATIONS:
+----------------
+- Use 4-8 windows for immediate operational decisions
+- Use 8-12 windows for shift planning
+- Use 12-24 windows for strategic planning (with understanding of lower accuracy)
+
+================================================================================
+2. FORECASTING MODEL SELECTION
+================================================================================
+
+WHAT IS IT?
+-----------
+The Forecasting Model determines the algorithm used to predict future patient
+arrivals. The dashboard offers two models with different capabilities and
+complexities.
+
+OPTION 1: SIMPLE MOVING AVERAGE
+--------------------------------
+
+How It Works:
+- Calculates the average of recent historical data points
+- Uses the same average value for all future time periods
+- Simple statistical method with minimal computation
+
+Mathematics:
+Forecast = Average(Last N data points)
+Example: If last 24 periods average 5 patients/15min, forecast = 5 for all periods
+
+Features:
+- Fast computation
+- Easy to understand
+- Works with minimal data (4+ data points)
+- Same prediction for all future periods
+
+Strengths:
+- Very fast processing
+- Simple to interpret
+- Good baseline for comparison
+- Reliable when patterns are stable
+
+Limitations:
+- Doesn't account for time of day patterns
+- Doesn't consider day of week effects
+- Same prediction regardless of time period
+- May miss peaks and valleys
+
+Best For:
+- Quick estimates
+- Baseline comparisons
+- Limited historical data
+- Simple scenarios with consistent patterns
+
+When to Use:
+- Testing the system
+- Comparing with advanced model
+- When you have limited data
+- When speed is more important than accuracy
+
+OPTION 2: TIME SERIES (ADVANCED)
+---------------------------------
+
+How It Works:
+- Machine learning model using Linear Regression
+- Analyzes 8 engineered features to learn patterns
+- Generates different predictions for different time periods
+- Accounts for temporal patterns, trends, and dependencies
+
+Features Used (8 total):
+1. Hour of Day (sin/cos encoding) - Captures daily cycles
+2. Day of Week - Captures weekly patterns
+3. Weekend Indicator - Distinguishes weekday/weekend
+4. Lag 1 - Previous 15-minute value
+5. Lag 4 - Value from 1 hour ago
+6. Lag 24 - Value from 6 hours ago
+7. Moving Average 4 - 1-hour trend
+8. Moving Average 24 - 6-hour trend
+
+Mathematics:
+Forecast = LinearRegression(Feature1, Feature2, ..., Feature8)
+The model learns weights for each feature through training
+
+Strengths:
+- Accounts for time patterns (hourly, daily, weekly)
+- Adapts predictions based on time of day
+- Considers recent trends and historical patterns
+- More accurate for complex scenarios
+- Produces varying predictions across time periods
+
+Limitations:
+- Requires more data (10+ data points minimum)
+- Slightly slower computation
+- More complex to understand
+- Needs sufficient historical data for accuracy
+
+Best For:
+- Accurate operational planning
+- When you have enough historical data
+- Complex pattern recognition
+- Production use cases
+
+When to Use:
+- When accuracy is important
+- For operational decision-making
+- When you have 10+ data points
+- When you need time-aware predictions
+
+EXAMPLE COMPARISON:
+-------------------
+
+Scenario: Forecasting next 4 hours (16 windows) at 6 PM on a weekday
+
+Simple Moving Average:
+- Looks at last 24 periods average: 5 patients/15min
+- Prediction: 5 patients/15min for all 16 future periods
+- Same flat line regardless of time
+
+Time Series (Advanced):
+- Analyzes: It's 6 PM (evening peak), weekday, recent trend shows increase
+- Prediction: 
+  * 6:15 PM: 8 patients (evening peak)
+  * 7:00 PM: 9 patients (peak continues)
+  * 9:00 PM: 6 patients (peak declining)
+  * 10:00 PM: 4 patients (evening quieting)
+- Different predictions reflecting time patterns
+
+================================================================================
+3. HOW FORECAST SETTINGS WORK TOGETHER
+================================================================================
+
+INTERACTION BETWEEN SETTINGS:
+------------------------------
+
+The Forecast Horizon and Model Selection work together:
+
+Example 1: Short Horizon + Simple Model
+- Horizon: 4 windows (1 hour)
+- Model: Simple Moving Average
+- Result: Quick, simple forecast for next hour
+- Use Case: Immediate decision making
+
+Example 2: Medium Horizon + Advanced Model (RECOMMENDED)
+- Horizon: 8 windows (2 hours)
+- Model: Time Series (Advanced)
+- Result: Accurate, pattern-aware forecast
+- Use Case: Operational planning
+
+Example 3: Long Horizon + Advanced Model
+- Horizon: 24 windows (6 hours)
+- Model: Time Series (Advanced)
+- Result: Longer-term forecast with time awareness
+- Use Case: Extended planning
+
+IMPACT ON VISUALIZATION:
+------------------------
+
+The Forecast Settings directly affect the Demand Forecast chart:
+
+1. Forecast Horizon controls:
+   - How far the orange forecast line extends
+   - Length of confidence interval shaded area
+   - Number of future time periods displayed
+
+2. Model Selection controls:
+   - Shape of forecast line (flat vs varying)
+   - Accuracy of predictions
+   - Width of confidence intervals
+
+REAL-TIME UPDATES:
+------------------
+
+When you change Forecast Settings:
+- The forecast chart updates immediately
+- New predictions are generated using selected settings
+- Confidence intervals recalculate
+- No need to refresh or restart
+
+================================================================================
+4. PRACTICAL USAGE GUIDELINES
+================================================================================
+
+RECOMMENDED CONFIGURATIONS:
+
+For Real-Time Monitoring:
+- Forecast Horizon: 4-8 windows (1-2 hours)
+- Model: Time Series (Advanced)
+- Refresh: Every 2-5 seconds
+- Purpose: Immediate operational awareness
+
+For Shift Planning:
+- Forecast Horizon: 8-12 windows (2-3 hours)
+- Model: Time Series (Advanced)
+- Refresh: Every 15-30 seconds
+- Purpose: Staff scheduling and resource allocation
+
+For Strategic Planning:
+- Forecast Horizon: 16-24 windows (4-6 hours)
+- Model: Time Series (Advanced) if sufficient data, else Simple Moving Average
+- Refresh: Manual or every 1-2 minutes
+- Purpose: Long-term capacity planning
+
+For Testing/Demonstration:
+- Forecast Horizon: 8 windows (default)
+- Model: Try both models to compare
+- Refresh: Manual
+- Purpose: Understanding system capabilities
+
+COMMON MISTAKES TO AVOID:
+-------------------------
+
+1. Using Long Horizon (24 windows) with Simple Model
+   - Problem: Flat predictions miss time patterns
+   - Solution: Use Advanced model for longer horizons
+
+2. Using Advanced Model with Insufficient Data
+   - Problem: Model needs 10+ data points for accuracy
+   - Solution: Generate sample data first or use Simple model
+
+3. Setting Horizon Too Short for Planning Needs
+   - Problem: 1-hour forecast insufficient for shift planning
+   - Solution: Increase horizon to 8-12 windows
+
+4. Not Understanding Confidence Intervals
+   - Problem: Treating forecast as exact prediction
+   - Solution: Consider confidence intervals in decision-making
+
+================================================================================
+5. TECHNICAL IMPLEMENTATION DETAILS
+================================================================================
+
+HOW FORECAST HORIZON IS PROCESSED:
+-----------------------------------
+
+1. User selects horizon value (e.g., 8 windows)
+2. System calls: forecaster.predict(forecast_horizon=8)
+3. Model generates 8 prediction values
+4. Each value represents expected patients in that 15-minute window
+5. System creates timeline: current_time + (1×15min), (2×15min), ..., (8×15min)
+6. All 8 predictions displayed together on chart
+
+HOW MODEL SELECTION WORKS:
+---------------------------
+
+1. User selects model from dropdown
+2. System checks: which model was selected?
+3. If "Simple Moving Average":
+   - Uses SimpleMovingAverageForecaster instance
+   - Calls predict() method
+   - Returns average-based predictions
+
+4. If "Time Series (Advanced)":
+   - Uses TimeSeriesForecaster instance
+   - First calls fit() to train model (if needed)
+   - Then calls predict() method
+   - Returns ML-based predictions with features
+
+5. Both models return:
+   - Predictions array (one value per window)
+   - Lower bounds array (confidence interval lower)
+   - Upper bounds array (confidence interval upper)
+
+CONFIDENCE INTERVALS EXPLANATION:
+----------------------------------
+
+What They Show:
+- Range of likely values (95% confidence)
+- Lower bound: Minimum expected patients
+- Upper bound: Maximum expected patients
+- Actual value likely falls within this range
+
+Calculation:
+- Based on historical data variability
+- Uses standard deviation of recent data
+- 95% confidence = ±1.96 standard deviations
+- Wider intervals = more uncertainty
+
+How to Interpret:
+- Narrow interval: High confidence in prediction
+- Wide interval: Lower confidence, more uncertainty
+- Interval width increases with forecast horizon
+
+================================================================================
+6. TROUBLESHOOTING
+================================================================================
+
+COMMON ISSUES:
+
+Issue: "Need at least 4 data points for forecasting"
+- Cause: Insufficient historical data
+- Solution: Generate sample data or wait for more arrivals
+
+Issue: Forecast shows flat line regardless of time
+- Cause: Using Simple Moving Average model
+- Solution: Switch to Time Series (Advanced) model
+
+Issue: Forecast seems inaccurate
+- Cause: Insufficient historical data for Advanced model
+- Solution: Generate more sample data or use Simple model
+
+Issue: Confidence intervals very wide
+- Cause: High variability in historical data
+- Solution: Normal - indicates high uncertainty, consider wider planning margins
+
+Issue: Forecast not updating
+- Cause: Auto-refresh disabled or data not changing
+- Solution: Enable auto-refresh or manually generate new patients
+
+================================================================================
+END OF FORECAST SETTINGS EXPLANATION
+================================================================================
+
